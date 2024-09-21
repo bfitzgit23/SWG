@@ -49,6 +49,10 @@ adk = "object/tangible/veteran_reward/antidecay.iff"
 
 x31Speeder = "object/tangible/deed/vehicle_deed/landspeeder_x31_deed.iff"
 
+harvester = "object/tangible/veteran_reward/harvester.iff"
+
+resourceDeed = "object/tangible/veteran_reward/resource.iff"
+
 professionSpecificItems = {
 	combat_brawler = { brawlerOneHander, brawlerTwoHander, brawlerPolearm },
 	combat_marksman = { marksmanPistol, marksmanCarbine, marksmanRifle },
@@ -59,4 +63,4 @@ professionSpecificItems = {
 	social_entertainer = { slitherhorn }
 }
 
-commonStartingItems = { marojMelon, survivalKnife, x31Speeder, adk}
+commonStartingItems = { marojMelon, survivalKnife, x31Speeder, adk, harvester }
