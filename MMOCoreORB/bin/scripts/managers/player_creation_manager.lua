@@ -45,6 +45,8 @@ slitherhorn = "object/tangible/instrument/slitherhorn.iff"
 
 marojMelon = "object/tangible/food/foraged/foraged_fruit_s1.iff"
 
+adk = "object/tangible/veteran_reward/antidecay.iff"
+
 x31Speeder = "object/tangible/deed/vehicle_deed/landspeeder_x31_deed.iff"
 
 professionSpecificItems = {
@@ -57,4 +59,4 @@ professionSpecificItems = {
 	social_entertainer = { slitherhorn }
 }
 
-commonStartingItems = { marojMelon, survivalKnife, x31Speeder }
+commonStartingItems = { marojMelon, survivalKnife, x31Speeder, adk}
