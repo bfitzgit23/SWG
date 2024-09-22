@@ -44,6 +44,7 @@
 object_tangible_veteran_reward_resource = object_tangible_veteran_reward_shared_resource:new {
 
 	gameObjectType = 8388614
+	noTrade = 1
 	
 }
 
