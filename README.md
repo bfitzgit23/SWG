@@ -1,6 +1,6 @@
 ## SWG Genesis ##
 
-* [![Discord](https://discordapp.com/api/guilds/876373243752218664/widget.png)](https://discord.gg/X3FyPUaKmE)
+ [![Discord](https://discordapp.com/api/guilds/876373243752218664/widget.png)](https://discord.gg/X3FyPUaKmE)
 
 ## Genesis Credits and Thanks ##
 
