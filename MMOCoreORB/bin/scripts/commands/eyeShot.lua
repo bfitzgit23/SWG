@@ -63,7 +63,8 @@ EyeShotCommand = {
 		40 
 	  ),
 	  StateEffect( 
-		INTIMIDATE_EFFECT, 
+		--INTIMIDATE_EFFECT, 
+		{},
 		{}, 
 		{}, 
 		{}, 
