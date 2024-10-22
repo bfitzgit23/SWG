@@ -49,7 +49,7 @@ Core3 = {
 	MakeStatus = 1,
 	MakeWeb = 0,
 
-	ORB = "",
+	ORB = "connect.swggenesis.com",
 	ORBPort = 44419,
 
 	DBHost = "127.0.0.1",
