@@ -49,16 +49,16 @@ Core3 = {
 	MakeStatus = 1,
 	MakeWeb = 0,
 
-	ORB = "connect.swggenesis.com",
+	ORB = "",
 	ORBPort = 44419,
 
 	DBHost = "127.0.0.1",
 	DBPort = 3306,
 	DBName = "swgemu",
 	DBUser = "swgemu",
-	DBPass = "123456",
+	DBPass = "NuttySWG12",
 	DBInstances = 2,
-	DBSecret = "swgemus3cr37!", -- Change this! This value should be unique and of reasonable length.
+	DBSecret = "conlaigh!2345", -- Change this! This value should be unique and of reasonable length.
 
 	LoginPort = 44453,
 	LoginProcessingThreads = 1,
@@ -76,7 +76,7 @@ Core3 = {
 	MetricsPort = 8125,
 	MetricsPrefix = "",
 
-	AutoReg = 1,
+	AutoReg = 0,
 
 	ProgressMonitors = "true",
 
@@ -140,13 +140,14 @@ Core3 = {
 
 
 	-- Where tre files are stored
-	TrePath = "/home/swgemu/Desktop/SWGEmu",
+	TrePath = "/trefiles",
 
 	-- Each tre file (order is important!)
 	TreFiles = {
 	"aftermath_1.tre",
 	"aftermath_NGE.tre",
 	"aftermath_house.tre",
+	"hunted_custom.tre",	
 	"default_patch.tre",
 	"patch_sku1_14_00.tre",
 	"patch_14_00.tre",
