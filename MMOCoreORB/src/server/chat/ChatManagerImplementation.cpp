@@ -323,6 +323,11 @@ void ChatManagerImplementation::initiateRooms() {
 	auctionRoom->setCanEnter(true);
 	auctionRoom->setChatRoomType(ChatRoom::AUCTION);
 
+	generalRoom = createRoom("Galaxy", galaxyRoom);
+	generalRoom->setCanEnter(true);
+	generalRoom->setAllowSubrooms(true);
+	generalRoom->setTitle("Hunted Galaxy General Chat");
+
 }
 
 void ChatManagerImplementation::initiatePlanetRooms() {
