@@ -582,7 +582,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	box->setPromptText("You are limited to creating one character per 20 minutes. Attempting to create another character or deleting your character before the 20 minute timer expires will reset the timer.");
 	String playerName = playerCreature->getFirstName();
 	StringBuffer zBroadcast;
-	zBroadcast << "\\#00ace6" << playerName << " \\#ffb90f Has Joined Aftermath!";
+	zBroadcast << "\\#00ace6" << playerName << " \\#ffb90f Has Joined Hunted!";
 	playerCreature->getZoneServer()->getChatManager()->broadcastGalaxy(NULL, zBroadcast.toString());
 
 	ghost->addSuiBox(box);
