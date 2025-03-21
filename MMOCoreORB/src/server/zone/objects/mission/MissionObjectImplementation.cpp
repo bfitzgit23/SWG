@@ -14,6 +14,8 @@
 #include "server/zone/packets/mission/MissionObjectDeltaMessage3.h"
 #include "server/zone/ZoneServer.h"
 #include "server/zone/objects/group/GroupObject.h"
+#include "server/zone/managers/director/DirectorManager.h"
+#include "server/zone/objects/player/PlayerObject.h"
 
 void MissionObjectImplementation::initializeTransientMembers() {
 	SceneObjectImplementation::initializeTransientMembers();
@@ -129,6 +131,18 @@ void MissionObjectImplementation::setMissionTargetName(const String& target, boo
 void MissionObjectImplementation::setMissionDifficulty(int diffLevel, bool notifyClient) {
 	setMissionDifficulty(diffLevel, diffLevel, 2, notifyClient);
 }
+
+void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
+ 	TerminalImplementation::fillObjectMenuResponse(menuResponse, player);
+ @@ -28,6 +30,10 @@ void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
+ 		menuResponse->addRadialMenuItemToRadialID(73, 76, 3, "@city/city:south"); // South
+ 		menuResponse->addRadialMenuItemToRadialID(73, 77, 3, "@city/city:west"); // West
+ 	}
+ 		if (terminalType == "general" || terminalType == "imperial" || terminalType == "rebel") {
+         menuResponse->addRadialMenuItem(112, 3, "Choose Mission Level");
+         menuResponse->addRadialMenuItem(113, 3, "Choose Mission Direction");
+     }
+ }
 
 void MissionObjectImplementation::setMissionDifficulty(int diffLevel, int display, int diff, bool notifyClient) {
 	difficultyLevel = diffLevel;
@@ -311,6 +325,31 @@ void MissionObjectImplementation::setEndPosition(float posX, float posY, const S
 		player->sendMessage(delta);
 	}
 }
+
+int MissionTerminalImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
+ @@ -78,6 +84,24 @@ int MissionTerminalImplementation::handleObjectMenuSelect(CreatureObject* player
+ 		cityManager->alignAmenity(city, player, _this.getReferenceUnsafeStaticCast(), selectedID - 74);
+ 
+ 		return 0;
+ 	} else if (selectedID == 112) {
+         
+         Lua* lua = DirectorManager::instance()->getLuaInstance();
+         
+         Reference<LuaFunction*> mission_level_choice = lua->createFunction("mission_level_choice", "openWindow", 0);
+         *mission_level_choice << player;
+         
+         mission_level_choice->callFunction();
+         return 0;
+     } else if (selectedID == 113) {
+         
+         Lua* lua = DirectorManager::instance()->getLuaInstance();
+         
+         Reference<LuaFunction*> mission_direction_choice = lua->createFunction("mission_direction_choice", "openWindow", 0);
+         *mission_direction_choice << player;
+         
+         mission_direction_choice->callFunction();
+         return 0;
+ 	}
 
 void MissionObjectImplementation::setCreatorName(const String& name, bool notifyClient) {
 	creatorName = name;
