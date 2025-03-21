@@ -44,7 +44,7 @@
 --GENERAL PLAYER SETTINGS
 -----------------------------------
 
-onlineCharactersPerAccount = 3 --How many characters are allowed online from a single account.
+onlineCharactersPerAccount = 4 --How many characters are allowed online from a single account.
 
 allowSameAccountPvpRatingCredit = 0
 
@@ -65,10 +65,10 @@ expensiveMedicalBuff = 1750
 expensiveMedicalSubBuff = 1900
 
 --Sets the experience multiplier while grouped
-groupExpMultiplier = 1.2
+groupExpMultiplier = 10
 
 --Sets a global experience multiplier
-globalExpMultiplier = 6
+globalExpMultiplier = 8
 
 --Sets the base number of control devices of each type that a player can have in their datapad at once
 --For creature pets, A Creature Handler will have the base number + their stored pets skill mod as limit
@@ -81,9 +81,9 @@ baseStoredShips = 3
 -----------------------------------
 --VETERAN REWARDS CONFIG
 -----------------------------------
-veteranRewardMilestones = {30, 60, 90, 120, 150, 180, 310, 340, 370, 400, 430, 460} --days, must be sorted low to high
+veteranRewardMilestones = {1, 60, 90, 120, 150, 180, 310, 340, 370, 400, 430, 460} --days, must be sorted low to high
 
-veteranRewardAdditionalMilestones = 30 --frequency, in days, of additional milestones (beyond the established ones)
+veteranRewardAdditionalMilestones = 1 --frequency, in days, of additional milestones (beyond the established ones)
 
 veteranRewards = {
 
