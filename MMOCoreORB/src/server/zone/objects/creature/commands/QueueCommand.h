@@ -313,7 +313,7 @@ public:
 		for (int i = 0; i < creo->getSlottedObjectsSize(); ++i) {
 			SceneObject* item = creo->getSlottedObject(i);
 			if (item != nullptr && item->isArmorObject())
-				return true;
+				return false;
 		}
 
 		return false;
