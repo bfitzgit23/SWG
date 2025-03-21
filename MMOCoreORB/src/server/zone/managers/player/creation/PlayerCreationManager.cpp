@@ -569,10 +569,13 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 	JediManager::instance()->onPlayerCreated(playerCreature);
 
-	chatManager->sendMail("system", "@newbie_tutorial/newbie_mail:welcome_subject", "@newbie_tutorial/newbie_mail:welcome_body", playerCreature->getFirstName());
-
+	chatManager->sendMail("SWG-Hunted", "Welcome", "Welcome to SWG-Hunted, This is a fun and exciting server with lots of quality of life improvements.\n    For a list of the changes please visit the discord server. If you have any questions/comments/concerns/suggestions please join the discord, now go have fun.\nThanks,\nbennji", playerCreature->getFirstName());	chatManager->sendMail("SWG-Hunted", "Welcome", "Welcome to SWG-Hunted, This is a fun and exciting server with lots of quality of life improvements.\n    For a list of the changes please visit the discord server. If you have any questions/comments/concerns/suggestions please join the discord, now go have fun.\nThanks,\nbennji", playerCreature->getFirstName());
+	
 	//Join auction chat room
 	ghost->addChatRoom(chatManager->getAuctionRoom()->getRoomID());
+
+	//Join Galaxychat
+	ghost->addChatRoom(chatManager->getGeneralRoom()->getRoomID());	
 
 	ManagedReference<SuiMessageBox*> box = new SuiMessageBox(playerCreature, SuiWindowType::NONE);
 	box->setPromptTitle("PLEASE NOTE");
