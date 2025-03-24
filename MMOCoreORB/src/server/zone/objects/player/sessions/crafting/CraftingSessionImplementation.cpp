@@ -1219,6 +1219,10 @@ void CraftingSessionImplementation::createPrototype(int clientCounter, bool crea
 			xp = round(xp * 1.05f);
 		}
 
+		// Apply crafting XP multiplier - Increase crafting XP gain
+		// Least invasive way to increase crafting XP gain
+		xp = round(xp * 10.0f);
+
 		Reference<PlayerManager*> playerManager = crafter->getZoneServer()->getPlayerManager();
 		playerManager->awardExperience(crafter, xpType, xp, true);
 

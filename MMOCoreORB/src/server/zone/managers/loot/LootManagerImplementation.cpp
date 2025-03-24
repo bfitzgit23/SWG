@@ -261,11 +261,11 @@ int LootManagerImplementation::calculateLootCredits(int level) {
 TangibleObject* LootManagerImplementation::createLootObject(const LootItemTemplate* templateObject, int level, bool maxCondition) {
 	int uncappedLevel = level;
 
-	if(level < 1)
-		level = 1;
+	// if(level < 1)
+	//	level = 1;
 
-	if(level > 300)
-		level = 300;
+	// if(level > 300)
+		level = 350;
 
 	const String& directTemplateObject = templateObject->getDirectObjectTemplate();
 
@@ -353,7 +353,7 @@ TangibleObject* LootManagerImplementation::createLootObject(const LootItemTempla
 		if (min == max)
 			continue;
 
-		float percentage = System::random(10000) / 10000.f;
+		float percentage = 9000 + System::random(1000) / 10000.f;
 
 		// If the attribute is represented by an integer (useCount, maxDamage,
 		// range mods, etc), we need to base the percentage on a random roll

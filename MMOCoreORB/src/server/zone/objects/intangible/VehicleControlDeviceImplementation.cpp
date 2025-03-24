@@ -87,7 +87,7 @@ void VehicleControlDeviceImplementation::generateObject(CreatureObject* player) 
 		message.setDI(5);
 		player->sendSystemMessage(message);
 
-		player->addPendingTask("call_mount", callMount, 5 * 1000);
+		player->addPendingTask("call_mount", callMount, 0 * 1000);
 
 		if (vehicleControlObserver == nullptr) {
 			vehicleControlObserver = new VehicleControlObserver(_this.getReferenceUnsafeStaticCast());

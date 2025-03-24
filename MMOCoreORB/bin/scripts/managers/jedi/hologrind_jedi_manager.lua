@@ -1,13 +1,11 @@
 JediManager = require("managers.jedi.jedi_manager")
 local ObjectManager = require("managers.object.object_manager")
+local PlayerManager = require("managers.player_manager")
 
 jediManagerName = "HologrindJediManager"
 
-NUMBEROFPROFESSIONSTOMASTER = 1
-MAXIMUMNUMBEROFPROFESSIONSTOSHOWWITHHOLOCRON = 1
-
-USEDHOLOCRON = "used_holocron"
-HOLOCRONCOOLDOWNTIME = 1 * 60 * 60 * 1000 -- 24 hours
+NUMBEROFPROFESSIONSTOMASTER = 2 --this is now how many profs are selected
+MAXIMUMNUMBEROFPROFESSIONSTOSHOWWITHHOLOCRON = 2
 
 HologrindJediManager = JediManager:new {
 	screenplayName = jediManagerName,
@@ -21,77 +19,39 @@ HologrindJediManager = JediManager:new {
 function HologrindJediManager:getGrindableProfessionList()
 	local grindableProfessions = {
 		-- String Id, badge number, profession name
-		{ "crafting_architect_master", 		CRAFTING_ARCHITECT_MASTER  }, 		--1
-		{ "crafting_armorsmith_master", 	CRAFTING_ARMORSMITH_MASTER  },  	--2
-		{ "crafting_artisan_master", 		CRAFTING_ARTISAN_MASTER  },		--3
-		{ "outdoors_bio_engineer_master", 	OUTDOORS_BIO_ENGINEER_MASTER  },		--4
-		{ "combat_bountyhunter_master", 	COMBAT_BOUNTYHUNTER_MASTER  },		--5
-		{ "combat_brawler_master", 		COMBAT_BRAWLER_MASTER  },		--6
-		{ "combat_carbine_master", 		COMBAT_CARBINE_MASTER  },		--7
-		{ "crafting_chef_master", 		CRAFTING_CHEF_MASTER  },		--8
-		{ "science_combatmedic_master", 	SCIENCE_COMBATMEDIC_MASTER  },		--9
-		{ "combat_commando_master", 		COMBAT_COMMANDO_MASTER  },		--10
-		{ "outdoors_creaturehandler_master", 	OUTDOORS_CREATUREHANDLER_MASTER  },	--11
-		{ "social_dancer_master", 		SOCIAL_DANCER_MASTER  },		--12
-		{ "science_doctor_master", 		SCIENCE_DOCTOR_MASTER  },		--13
-		{ "crafting_droidengineer_master", 	CRAFTING_DROIDENGINEER_MASTER  },	--14
-		{ "social_entertainer_master", 		SOCIAL_ENTERTAINER_MASTER  },		--15
-		{ "combat_1hsword_master", 		COMBAT_1HSWORD_MASTER  },		--16
-		{ "social_imagedesigner_master", 	SOCIAL_IMAGEDESIGNER_MASTER  },		--17
-		{ "combat_marksman_master", 		COMBAT_MARKSMAN_MASTER  },		--18
-		{ "science_medic_master", 		SCIENCE_MEDIC_MASTER  },		--19
-		{ "crafting_merchant_master", 		CRAFTING_MERCHANT_MASTER  },		--20
-		{ "social_musician_master", 		SOCIAL_MUSICIAN_MASTER  },		--21
-		{ "combat_polearm_master", 		COMBAT_POLEARM_MASTER  },		--22
-		{ "combat_pistol_master", 		COMBAT_PISTOL_MASTER  },		--23
-		{ "outdoors_ranger_master", 		OUTDOORS_RANGER_MASTER  },		--24
-		{ "combat_rifleman_master", 		COMBAT_RIFLEMAN_MASTER  },		--25
-		{ "outdoors_scout_master", 		OUTDOORS_SCOUT_MASTER  },		--26
-		{ "combat_smuggler_master", 		COMBAT_SMUGGLER_MASTER  },		--27
-		{ "outdoors_squadleader_master", 	OUTDOORS_SQUADLEADER_MASTER  },		--28
-		{ "combat_2hsword_master", 		COMBAT_2HSWORD_MASTER  },		--29
-		{ "crafting_tailor_master", 		CRAFTING_TAILOR_MASTER  },		--30
-		{ "crafting_weaponsmith_master", 	CRAFTING_WEAPONSMITH_MASTER  },		--31
-		{ "combat_unarmed_master", 		COMBAT_UNARMED_MASTER  },		--32
+		{ "crafting_architect_master", 		CRAFTING_ARCHITECT_MASTER  },
+		{ "crafting_armorsmith_master", 	CRAFTING_ARMORSMITH_MASTER  },
+		{ "crafting_artisan_master", 		CRAFTING_ARTISAN_MASTER  },
+		{ "outdoors_bio_engineer_master", 	OUTDOORS_BIO_ENGINEER_MASTER  },
+		{ "combat_bountyhunter_master", 	COMBAT_BOUNTYHUNTER_MASTER  },
+		{ "combat_brawler_master", 		COMBAT_BRAWLER_MASTER  },
+		{ "combat_carbine_master", 		COMBAT_CARBINE_MASTER  },
+		{ "crafting_chef_master", 		CRAFTING_CHEF_MASTER  },
+		{ "science_combatmedic_master", 	SCIENCE_COMBATMEDIC_MASTER  },
+		{ "combat_commando_master", 		COMBAT_COMMANDO_MASTER  },
+		{ "outdoors_creaturehandler_master", 	OUTDOORS_CREATUREHANDLER_MASTER  },
+		{ "social_dancer_master", 		SOCIAL_DANCER_MASTER  },
+		{ "science_doctor_master", 		SCIENCE_DOCTOR_MASTER  },
+		{ "crafting_droidengineer_master", 	CRAFTING_DROIDENGINEER_MASTER  },
+		{ "social_entertainer_master", 		SOCIAL_ENTERTAINER_MASTER  },
+		{ "combat_1hsword_master", 		COMBAT_1HSWORD_MASTER  },
+		{ "social_imagedesigner_master", 	SOCIAL_IMAGEDESIGNER_MASTER  },
+		{ "combat_marksman_master", 		COMBAT_MARKSMAN_MASTER  },
+		{ "science_medic_master", 		SCIENCE_MEDIC_MASTER  },
+		{ "social_musician_master", 		SOCIAL_MUSICIAN_MASTER  },
+		{ "combat_polearm_master", 		COMBAT_POLEARM_MASTER  },
+		{ "combat_pistol_master", 		COMBAT_PISTOL_MASTER  },
+		{ "outdoors_ranger_master", 		OUTDOORS_RANGER_MASTER  },
+		{ "combat_rifleman_master", 		COMBAT_RIFLEMAN_MASTER  },
+		{ "outdoors_scout_master", 		OUTDOORS_SCOUT_MASTER  },
+		{ "combat_smuggler_master", 		COMBAT_SMUGGLER_MASTER  },
+		{ "outdoors_squadleader_master", 	OUTDOORS_SQUADLEADER_MASTER  },
+		{ "combat_2hsword_master", 		COMBAT_2HSWORD_MASTER  },
+		{ "crafting_tailor_master", 		CRAFTING_TAILOR_MASTER  },
+		{ "crafting_weaponsmith_master", 	CRAFTING_WEAPONSMITH_MASTER  },
+		{ "combat_unarmed_master", 		COMBAT_UNARMED_MASTER  },
 	}
 	return grindableProfessions
-end
-
-function HologrindJediManager:convertProfessionString(professionId)
-	originalProfession = self:getProfessionStringIdFromBadgeNumber(professionId)
-	if (originalProfession == "crafting_architect_master") then return "Master Architect" end
-	if (originalProfession == "crafting_armorsmith_master") then return "Master Armorsmith" end
-	if (originalProfession == "crafting_artisan_master") then return "Master Artisan" end
-	if (originalProfession == "outdoors_bio_engineer_master") then return "Master Bio Engineer" end
-	if (originalProfession == "combat_bountyhunter_master") then return "Master Bounty Hunter" end
-	if (originalProfession == "combat_brawler_master") then return "Master Brawler" end
-	if (originalProfession == "combat_carbine_master") then return "Master Carbineer" end
-	if (originalProfession == "crafting_chef_master") then return "Master Chef" end
-	if (originalProfession == "science_combatmedic_master") then return "Master Combat Medic" end
-	if (originalProfession == "combat_commando_master") then return "Master Commando" end
-	if (originalProfession == "outdoors_creaturehandler_master") then return "Master Creature Handler" end
-	if (originalProfession == "social_dancer_master") then return "Master Dancer" end
-	if (originalProfession == "science_doctor_master") then return "Master Doctor" end
-	if (originalProfession == "crafting_droidengineer_master") then return "Master Droid Engineer" end
-	if (originalProfession == "social_entertainer_master") then return "Master Entertainer" end
-	if (originalProfession == "combat_1hsword_master") then return "Master Fencer" end
-	if (originalProfession == "social_imagedesigner_master") then return "Master Image Designer" end
-	if (originalProfession == "combat_marksman_master") then return "Master Marksman" end
-	if (originalProfession == "science_medic_master") then return "Master Medic" end
-	if (originalProfession == "crafting_merchant_master") then return "Master Merchant" end
-	if (originalProfession == "social_musician_master") then return "Master Musician" end
-	if (originalProfession == "combat_polearm_master") then return "Master Polearm" end
-	if (originalProfession == "combat_pistol_master") then return "Master Pistoleer" end
-	if (originalProfession == "outdoors_ranger_master") then return "Master Ranger" end
-	if (originalProfession == "combat_rifleman_master") then return "Master Rifleman" end
-	if (originalProfession == "outdoors_scout_master") then return "Master Scout" end
-	if (originalProfession == "combat_smuggler_master") then return "Master Smuggler" end
-	if (originalProfession == "outdoors_squadleader_master") then return "Master Squad Leader" end
-	if (originalProfession == "combat_2hsword_master") then return "Master Swordsman" end
-	if (originalProfession == "crafting_tailor_master") then return "Master Tailor" end
-	if (originalProfession == "crafting_weaponsmith_master") then return "Master Weaponsmith" end
-	if (originalProfession == "combat_unarmed_master") then return "Teras Kasi Master" end
-	return "Unknown profession!"
 end
 
 -- Handling of the onPlayerCreated event.
@@ -125,7 +85,7 @@ function HologrindJediManager:getNumberOfMasteredProfessions(pCreatureObject)
 	end
 
 	local professions = PlayerObject(pGhost):getHologrindProfessions()
-	local masteredNumberOfProfessions = 0
+	local masteredNumberOfProfessions = 0 --this number is now how many of the selected professions you dont need to do
 	for i = 1, #professions, 1 do
 		if PlayerObject(pGhost):hasBadge(professions[i]) then
 			masteredNumberOfProfessions = masteredNumberOfProfessions + 1
@@ -156,7 +116,7 @@ end
 -- @param pCreatureObject pointer to the creature object of the player who unlocked jedi.
 function HologrindJediManager:sendSuiWindow(pCreatureObject)
 	local suiManager = LuaSuiManager()
-	suiManager:sendMessageBox(pCreatureObject, pCreatureObject, "@quest/force_sensitive/intro:force_sensitive", "Perhaps you should meditate somewhere alone...", "@ok", "HologrindJediManager", "notifyOkPressed")
+	suiManager:sendMessageBox(pCreatureObject, pCreatureObject, "@quest/force_sensitive/intro:force_sensitive", "You begin to feel attuned with the power of the Force. Congratulations! This character is now a Jedi. First, you need to find a lightsaber color crystal and craft a lightsaber. You also have to find your Jedi trainer, it could be any stating profession trainer on any planet, converse with them to find yours. Using your Jedi abilities near NPCs or players will gain you visibility for player and NPC bounty hunters. May the force be with you...", "@ok", "HologrindJediManager", "notifyOkPressed")
 end
 
 -- Award skill and jedi status to the player.
@@ -167,22 +127,31 @@ function HologrindJediManager:awardJediStatusAndSkill(pCreatureObject)
 	if (pGhost == nil) then
 		return
 	end
+	
+	CreatureObject(pCreatureObject):playEffect("clienteffect/trap_electric_01.cef", "")
+	
+	CreatureObject(pCreatureObject):playMusicMessage("sound/music_become_jedi.snd")
+	
+	PlayerObject(pGhost):setJediState(2)
+	
+	awardSkill(pCreatureObject, "force_title_jedi_rank_02")
+	
+	FsIntro:startStepDelay(pCreatureObject, 3)
+	
+	local pInventory = SceneObject(pCreatureObject):getSlottedObject("inventory")
 
-	PlayerObject(pGhost):setJediState(1)
+	if (pInventory == nil) then
+		return
+	end
 
-	awardSkill(pCreatureObject, "force_title_jedi_novice")
+	giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_padawan.iff", -1)
+	
 end
 
 -- Check if the player has mastered all hologrind professions and send sui window and award skills.
 -- @param pCreatureObject pointer to the creature object of the player to check the jedi progression on.
 function HologrindJediManager:checkIfProgressedToJedi(pCreatureObject)
-	local AmountOfProfessionsToMaster = NUMBEROFPROFESSIONSTOMASTER
-
-	if(self:fixBE(pCreatureObject, 0)) then
-		AmountOfProfessionsToMaster = AmountOfProfessionsToMaster + 1
-	end
-
-	if self:getNumberOfMasteredProfessions(pCreatureObject) >= AmountOfProfessionsToMaster and not self:isJedi(pCreatureObject) then
+	if self:getNumberOfMasteredProfessions(pCreatureObject) >= NUMBEROFPROFESSIONSTOMASTER and not self:isJedi(pCreatureObject) then
 		self:sendSuiWindow(pCreatureObject)
 		self:awardJediStatusAndSkill(pCreatureObject)
 	end
@@ -216,24 +185,17 @@ function HologrindJediManager:onPlayerLoggedIn(pCreatureObject)
 		return
 	end
 
-	if(self:fixBE(pCreatureObject, 0)) then
-		if(not self:fixBE(pCreatureObject, 62)) then
-			local pGhost = CreatureObject(pCreatureObject):getPlayerObject()
-			local skillList = self:getGrindableProfessionList()
-
-			if (pGhost == nil) then
-				return
-			end
-
-			PlayerObject(pGhost):addHologrindProfession(skillList[4][2])
-			Logger:logEvent("HologrindJediManager:: Fixing Bio-Engineer", LT_INFO)
-		end
-	end
-
 	self:checkIfProgressedToJedi(pCreatureObject)
 	self:registerObservers(pCreatureObject)
 
-	JediTrials:onPlayerLoggedIn(pCreatureObject)
+	if CreatureObject(pCreatureObject):hasSkill("force_title_jedi_rank_02") then	
+		FsIntro:startStepDelay(pCreatureObject, 3)
+	end
+	
+	if CreatureObject(pCreatureObject):hasSkill("force_title_jedi_rank_03") then	
+		FsIntro2:startStepDelay(pCreatureObject, 3)
+	end
+	
 end
 
 -- Get the profession name from the badge number.
@@ -252,22 +214,36 @@ end
 -- Find out and send the response from the holocron to the player
 -- @param pCreatureObject pointer to the creature object of the player who used the holocron.
 function HologrindJediManager:sendHolocronMessage(pCreatureObject)
-	if self:getNumberOfMasteredProfessions(pCreatureObject) >= MAXIMUMNUMBEROFPROFESSIONSTOSHOWWITHHOLOCRON then
-		-- The Holocron is quiet. The ancients' knowledge of the Force will no longer assist you on your journey. You must continue seeking on your own.
-		CreatureObject(pCreatureObject):sendSystemMessage("@jedi_spam:holocron_quiet")
-		return true
-	else
 		local pGhost = CreatureObject(pCreatureObject):getPlayerObject()
 
 		if (pGhost == nil) then
 			return false
 		end
+	if self:getNumberOfMasteredProfessions(pCreatureObject) >= MAXIMUMNUMBEROFPROFESSIONSTOSHOWWITHHOLOCRON then
+		-- The Holocron is quiet. The ancients' knowledge of the Force will no longer assist you on your journey. You must continue seeking on your own.
+--this is holocrons replenish force
+--		if self:isJedi(pCreatureObject) then
+--			if	PlayerObject(pGhost):getForcePower() < PlayerObject(pGhost):getForcePowerMax() then
+--				PlayerObject(pGhost):setForcePower(PlayerObject(pGhost):getForcePowerMax());
+--				CreatureObject(pCreatureObject):playEffect("clienteffect/trap_electric_01.cef", "")
+--				CreatureObject(pCreatureObject):sendSystemMessage("The holocron hums softly as you feel your Force power replenish.")
+--				return false
+--			else
+--				CreatureObject(pCreatureObject):sendSystemMessage("@jedi_spam:holocron_force_max")
+--				return true
+--			end
+--		end
+		CreatureObject(pCreatureObject):sendSystemMessage("@jedi_spam:holocron_quiet")
+		return true
+	else
 
 		local professions = PlayerObject(pGhost):getHologrindProfessions()
 		for i = 1, #professions, 1 do
 			if not PlayerObject(pGhost):hasBadge(professions[i]) then
 				local professionText = self:getProfessionStringIdFromBadgeNumber(professions[i])
 				CreatureObject(pCreatureObject):sendSystemMessageWithTO("@jedi_spam:holocron_light_information", "@skl_n:" .. professionText)
+				CreatureObject(pCreatureObject):playEffect("clienteffect/trap_electric_01.cef", "")
+				break
 			end
 		end
 
@@ -280,21 +256,24 @@ end
 -- @param itemType the type of item that is used.
 -- @param pCreatureObject pointer to the creature object that used the item.
 function HologrindJediManager:useItem(pSceneObject, itemType, pCreatureObject)
+	local pGhost = CreatureObject(pCreatureObject):getPlayerObject()
+
+	if (pGhost == nil) then
+		return false
+	end
+	
 	if (pCreatureObject == nil or pSceneObject == nil) then
 		return
 	end
 
 	if itemType == ITEMHOLOCRON then
-		if CreatureObject(pCreatureObject):hasSkill("force_title_jedi_rank_02") then
-			VillageJediManagerHolocron.useHolocron(pSceneObject, pCreatureObject)
+		local isSilent = self:sendHolocronMessage(pCreatureObject)
+
+		if isSilent then
+			return
 		else
-			local isSilent = self:sendHolocronMessage(pCreatureObject)
-			if isSilent then
-				return
-			else
-				SceneObject(pSceneObject):destroyObjectFromWorld()
-				SceneObject(pSceneObject):destroyObjectFromDatabase()
-			end
+			SceneObject(pSceneObject):destroyObjectFromWorld()
+			SceneObject(pSceneObject):destroyObjectFromDatabase()
 		end
 	end
 end
@@ -303,48 +282,23 @@ function HologrindJediManager:canLearnSkill(pPlayer, skillName)
 	return true
 end
 
---nitans way to retrofix the BE profession
---check if they have profession id which.
---id 0 = Unknown Profession
---id 62 = Bio Engineer
-function HologrindJediManager:fixBE(pCreatureObject, professionId)
-	if (pCreatureObject == nil) then
+function HologrindJediManager:canSurrenderSkill(pPlayer, skillName)
+
+	if skillName == "force_title_jedi_rank_02" or skillName == "force_title_jedi_novice" then
+		CreatureObject(pPlayer):sendSystemMessage("@jedi_spam:revoke_force_title")
 		return false
 	end
 
-	if(self:isJedi(pCreatureObject)) then
+--	if string.find(skillName, "force_sensitive_") and CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02") and CreatureObject(pPlayer):getForceSensitiveSkillCount(false) <= 24 then
+--		CreatureObject(pPlayer):sendSystemMessage("@jedi_spam:revoke_force_sensitive")
+--		return false
+--	end
+
+	if string.find(skillName, "force_discipline_") and CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_03") and not CreatureObject(pPlayer):villageKnightPrereqsMet(skillName) then
 		return false
 	end
 
-	local pGhost = CreatureObject(pCreatureObject):getPlayerObject()
-	local holoProfessions = PlayerObject(pGhost):getHologrindProfessions()
-
-	for i = 1, #holoProfessions, 1 do
-		if(holoProfessions[i] == professionId) then
-			return true
-		end
-	end
-	return false
-end
-
---make SUI to show unlock professions
-function HologrindJediManager:showUnlockProfessions(pPlayer)
-	local playerName = CreatureObject(pPlayer):getFirstName()
-	local suiManager = LuaSuiManager()
-
-	local pGhost = CreatureObject(pPlayer):getPlayerObject()
-	local holoProfessions = PlayerObject(pGhost):getHologrindProfessions()
-	local profCounter = 1
-	local professions = "List of professions:\n"
-
-	for i = 1, #holoProfessions, 1 do
-		if(holoProfessions[i] > 0) then
-			professions = professions .. profCounter .. ": " .. self:convertProfessionString(holoProfessions[i]) .. "\n"
-			profCounter = profCounter + 1
-		end
-	end
-
-	suiManager:sendMessageBox(pPlayer, pPlayer, "Unlock professions for " .. playerName, professions, "@ok", "HologrindJediManager,", "notifyOkPressed")
+	return true
 end
 
 registerScreenPlay("HologrindJediManager", true)

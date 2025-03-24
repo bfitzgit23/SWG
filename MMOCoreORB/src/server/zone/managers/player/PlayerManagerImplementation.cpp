@@ -1202,7 +1202,27 @@ void PlayerManagerImplementation::killPlayer(TangibleObject* attacker, CreatureO
 	player->updateTimeOfDeath();
 	player->clearBuffs(true, false);
 
+	// If the player is a Jedi and died in PvE (not killed by a player), make them lose Jedi XP
 	PlayerObject* ghost = player->getPlayerObject();
+	if (ghost != nullptr && ghost->getJediState() >= 2 && (!attacker->isPlayerCreature() && !attacker->isPet())) {
+		int jediXpCap = ghost->getXpCap("jedi_general");
+		int xpLoss = (int)(jediXpCap * -0.5f);
+		int curExp = ghost->getExperience("jedi_general");
+
+		int negXpCap = -10000000; // Cap on negative jedi experience
+
+		if ((curExp + xpLoss) < negXpCap)
+			xpLoss = negXpCap - curExp;
+
+		if (xpLoss < -2000000)
+			xpLoss = -2000000;
+
+		awardExperience(player, "jedi_general", xpLoss, true);
+		StringIdChatParameter message("base_player", "prose_revoke_xp");
+		message.setDI(xpLoss * -1);
+		message.setTO("exp_n", "jedi_general");
+		player->sendSystemMessage(message);
+	}
 
 	if (ghost != nullptr) {
 		ghost->resetIncapacitationTimes();
@@ -1224,31 +1244,31 @@ void PlayerManagerImplementation::killPlayer(TangibleObject* attacker, CreatureO
 				}
 		}
 
-		// if (attackerCreature->isPlayerCreature()) {
-		// 		String playerName = player->getFirstName();
-		// 		String killerName = attackerCreature->getFirstName();
-		// 		StringBuffer zBroadcast;
-		// 		String killerFaction, playerFaction;
-		// 		if (attacker->isRebel())
-		// 			killerFaction = "\\#FF9933 Rebel";
-		// 		else if (attacker->isImperial())
-		// 			killerFaction = "\\#7133FF Imperial";
-		// 		else
-		// 			killerFaction = "\\#c1be13 Civilian";
+		if (attackerCreature->isPlayerCreature()) {
+				String playerName = player->getFirstName();
+				String killerName = attackerCreature->getFirstName();
+				StringBuffer zBroadcast;
+				String killerFaction, playerFaction;
+				if (attacker->isRebel())
+					killerFaction = "\\#FF9933 Rebel";
+				else if (attacker->isImperial())
+					killerFaction = "\\#7133FF Imperial";
+				else
+					killerFaction = "\\#c1be13 Civilian";
 
-		// 		if (player->isRebel())
-		// 			playerFaction = "\\#FF9933 Rebel";
-		// 		else if (player->isImperial())
-		// 			playerFaction = "\\#7133FF Imperial";
-		// 		else
-		// 			playerFaction = "\\#c1be13 Civilian";
-		// 		if (!CombatManager::instance()->areInDuel(attackerCreature, player))
-		// 			zBroadcast << playerFaction <<"\\#00e604 " << playerName << "\\#e60000 was slain in PVP by" << killerFaction << "\\#00cc99 " << killerName;
-		// 		else
-		// 			zBroadcast << playerFaction <<"\\#00e604 " << playerName << "\\#e60000 was slain in a duel by" << killerFaction << "\\#00cc99 " << killerName;
+				if (player->isRebel())
+					playerFaction = "\\#FF9933 Rebel";
+				else if (player->isImperial())
+					playerFaction = "\\#7133FF Imperial";
+				else
+					playerFaction = "\\#c1be13 Civilian";
+				if (!CombatManager::instance()->areInDuel(attackerCreature, player))
+					zBroadcast << playerFaction <<"\\#00e604 " << playerName << "\\#e60000 was slain in PVP by" << killerFaction << "\\#00cc99 " << killerName;
+				else
+					zBroadcast << playerFaction <<"\\#00e604 " << playerName << "\\#e60000 was slain in a duel by" << killerFaction << "\\#00cc99 " << killerName;
 
-		// 		ghost->getZoneServer()->getChatManager()->broadcastGalaxy(NULL, zBroadcast.toString());
-		// }
+				ghost->getZoneServer()->getChatManager()->broadcastGalaxy(NULL, zBroadcast.toString());
+		}
 
 	}
 
@@ -1432,22 +1452,30 @@ void PlayerManagerImplementation::sendActivateCloneRequest(CreatureObject* playe
 		if (cbot->getFacilityType() == CloningBuildingObjectTemplate::JEDI_ONLY && player->hasSkill("force_title_jedi_rank_01")) {
 			String name = "Force Shrine (" + String::valueOf((int)loc->getWorldPositionX()) + ", " + String::valueOf((int)loc->getWorldPositionY()) + ")";
 			cloneMenu->addMenuItem(name, loc->getObjectID());
-		} else if ((cbot->getFacilityType() == CloningBuildingObjectTemplate::LIGHT_JEDI_ONLY && player->hasSkill("force_rank_light_novice")) ||
-				(cbot->getFacilityType() == CloningBuildingObjectTemplate::DARK_JEDI_ONLY && player->hasSkill("force_rank_dark_novice"))) {
-			FrsManager* frsManager = server->getFrsManager();
-
-			if (frsManager != nullptr && frsManager->isFrsEnabled()) {
-				String name = "Jedi Enclave (" + String::valueOf((int)loc->getWorldPositionX()) + ", " + String::valueOf((int)loc->getWorldPositionY()) + ")";
-				cloneMenu->addMenuItem(name, loc->getObjectID());
+		} else if (cbot->getFacilityType() == CloningBuildingObjectTemplate::LIGHT_JEDI_ONLY) {
+			if (player->hasSkill("force_rank_light_novice")) {
+				FrsManager* frsManager = server->getFrsManager();
+				if (frsManager != nullptr && frsManager->isFrsEnabled()) {
+					String name = "Light Jedi Enclave (" + String::valueOf((int)loc->getWorldPositionX()) + ", " + String::valueOf((int)loc->getWorldPositionY()) + ")";
+					cloneMenu->addMenuItem(name, loc->getObjectID());
+				}
+			}
+		} else if (cbot->getFacilityType() == CloningBuildingObjectTemplate::DARK_JEDI_ONLY) {
+			if (player->hasSkill("force_rank_dark_novice")) {
+				FrsManager* frsManager = server->getFrsManager();
+				if (frsManager != nullptr && frsManager->isFrsEnabled()) {
+					String name = "Dark Jedi Enclave (" + String::valueOf((int)loc->getWorldPositionX()) + ", " + String::valueOf((int)loc->getWorldPositionY()) + ")";
+					cloneMenu->addMenuItem(name, loc->getObjectID());
+				}
 			}
 		} else if (cbot->getFacilityType() != CloningBuildingObjectTemplate::JEDI_ONLY){
 			String name = "None";
-			ManagedReference<CityRegion*> cr2 = loc->getCityRegion().get();
-			if (cr2 != nullptr)
-				name = cr2->getRegionDisplayedName();
-			else
-				name = loc->getDisplayedName();
-			cloneMenu->addMenuItem(name, loc->getObjectID());
+				ManagedReference<CityRegion*> cr2 = loc->getCityRegion().get();
+				if (cr2 != nullptr)
+					name = cr2->getRegionDisplayedName();
+				else
+					name = loc->getDisplayedName();
+				cloneMenu->addMenuItem(name, loc->getObjectID());
 		}
 	}
 
@@ -1612,7 +1640,7 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 	// Jedi experience loss.
 	if (ghost->getJediState() >= 2) {
 		int jediXpCap = ghost->getXpCap("jedi_general");
-		int xpLoss = (int)(jediXpCap * -0.15);
+		int xpLoss = (int)(jediXpCap * -1.f);
 		int curExp = ghost->getExperience("jedi_general");
 
 		int negXpCap = -10000000; // Cap on negative jedi experience

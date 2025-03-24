@@ -198,6 +198,9 @@ void EntertainingSessionImplementation::addHealingXpGroup(int xp) {
 	ManagedReference<GroupObject*> group = entertainer->getGroup();
 	ManagedReference<PlayerManager*> playerManager = entertainer->getZoneServer()->getPlayerManager();
 
+	// Apply 10x Entertainer XP multiplier
+	xp *= 10;
+
 	for (int i = 0; i < group->getGroupSize(); ++i) {
 		try {
 			ManagedReference<CreatureObject *> groupMember = group->getGroupMember(i);
@@ -1098,6 +1101,9 @@ void EntertainingSessionImplementation::awardEntertainerExperience() {
 
 			xpAmount = ceil(xpAmount * totalBonus);
 
+			// Apply 10x Entertainer XP multiplier
+			xpAmount *= 10;
+
 			if (playerManager != nullptr)
 				playerManager->awardExperience(player, xptype, xpAmount, true);
 
@@ -1109,6 +1115,9 @@ void EntertainingSessionImplementation::awardEntertainerExperience() {
 
 		if (healingXp > 0) {
 			String healxptype("entertainer_healing");
+
+			// Apply 10x Entertainer XP multiplier
+			healingXp *= 10;
 
 			if (playerManager != nullptr)
 				playerManager->awardExperience(player, healxptype, healingXp, true);
