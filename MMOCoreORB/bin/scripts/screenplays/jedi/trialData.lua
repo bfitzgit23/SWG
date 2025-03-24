@@ -142,21 +142,8 @@ padawanTrialQuests = {
 
 knightTrialQuests = {
 	{
-		trialName = "tusken_raider",
-		trialType = TRIAL_HUNT,
-		huntTarget = "tusken_raider",
-		huntGoal = 25
-	},
-	{
 		trialName = "light_or_dark",
 		trialType = TRIAL_COUNCIL
-	},
-	{
-		trialName = "enemy_soldier",
-		trialType = TRIAL_HUNT_FACTION,
-		rebelTarget = "storm_commando",
-		imperialTarget = "rebel_commando",
-		huntGoal = 50
 	},
 }
 

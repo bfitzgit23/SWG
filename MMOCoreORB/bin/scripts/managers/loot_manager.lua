@@ -43,15 +43,15 @@
 --Determines how often exceptional and legendary items can drop.
 yellowChance = 250 -- 1 in 250
 exceptionalChance = 1000 --1 in 1000
-legendaryChance = 10000 --1 in 10,000
+legendaryChance = 5000 --1 in 5000
 --yellowChance = 50 --1 in 50 for testing
 --exceptionalChance = 100 --1 in 100 for testing
 --legendaryChance = 1000 --1 in 1000 for testing
 
 --Determines how much of an increase in the base stats will be applied to the object.
 yellowModifier = 1.5
-exceptionalModifier = 2
-legendaryModifier = 3.5
+exceptionalModifier = 5
+legendaryModifier = 5
 
 --The chance for random skill mods to be on looted weapons/wearables
 skillModChance = 500 -- 1 in 500
@@ -807,7 +807,7 @@ jediCrystalStats = {
 	},
 	lightsaber_module_krayt_dragon_pearl = {
 		minDamage = 20,
-		maxDamage = 50,
+		maxDamage = 60,
 		minHitpoints = 900,
 		maxHitpoints = 1400,
 		minHealthSac = -6,
@@ -819,7 +819,7 @@ jediCrystalStats = {
 		minAttackSpeed = -0.3,
 		maxAttackSpeed = -0.6,
 		minForceCost = -5.0,
-		maxForceCost = -9.9,
+		maxForceCost = -11.9,
 		minWoundChance = 2,
 		maxWoundChance = 4,
 	}
