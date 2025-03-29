@@ -1093,6 +1093,8 @@ void MissionManagerImplementation::randomizeGenericBountyMission(CreatureObject*
 			planet = getRandomBountyPlanet();
 		}
 
+		{
+		
 		Vector3 endPos = getRandomBountyTargetPosition(player, planet);
 		mission->setEndPosition(endPos.getX(), endPos.getY(), planet, true);
 
