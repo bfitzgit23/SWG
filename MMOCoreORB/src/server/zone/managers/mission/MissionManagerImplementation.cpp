@@ -763,31 +763,75 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	if (difficulty == 5)
 		difficulty = 4;
 
-		PlayerObject* targetGhost = player->getPlayerObject();
- 
- 	String level = targetGhost->getScreenPlayData("mission_level_choice", "levelChoice");
- 
- 	int levelChoice = Integer::valueOf(level);
- 
- 	if (levelChoice > 0) 
- 		diffDisplay += levelChoice;
- 
- 	else if (player->isGrouped()) {
-		bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
- 		Reference<GroupObject*> group = player->getGroup();
+	    int diffDisplay = difficultyLevel < 5 ? 4 : difficultyLevel;
+	    
+	    PlayerObject* targetGhost = player->getPlayerObject();
 	
-	int diffDisplay = difficultyLevel + 7;
-	if (player->isGrouped())
-		diffDisplay += player->getGroup()->getGroupLevel();
-	else
-		diffDisplay += playerLevel;
+	String level = targetGhost->getScreenPlayData("mission_level_choice", "levelChoice");
+    
+    	int levelChoice = Integer::valueOf(level);
+    
+	if(levelChoice > 0){
+		diffDisplay += levelChoice;
+	}else{
+		if (player->isGrouped()) {
+			bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
+			Reference<GroupObject*> group = player->getGroup();
 
+			if (group != nullptr) {
+				Locker locker(group);
+				diffDisplay += group->getGroupLevel(includeFactionPets);
+			}
+		} else {
+			diffDisplay += playerLevel;
+		}
+	}
+
+	String dir = targetGhost->getScreenPlayData("mission_direction_choice", "directionChoice");
+    float dirChoise = Float::valueOf(dir);
 	String building = lairTemplateObject->getMissionBuilding(difficulty);
 
 	if (building.isEmpty()) {
 		return;
 	}
 
+	NameManager* nm = processor->getNameManager();
+
+	TerrainManager* terrain = zone->getPlanetManager()->getTerrainManager();
+
+	Vector3 startPos;
+
+	bool foundPosition = false;
+	int maximumNumberOfTries = 20;
+	while (!foundPosition && maximumNumberOfTries-- > 0) {
+		foundPosition = true;
+
+		//int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
+		//distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
+		//startPos = player->getWorldCoordinate((float)distance, (float)System::random(360), false);
+
+		float direction = (float)System::random(360);
+        
+        if (dirChoise > 0){
+            int dev = System::random(8);
+            int isMinus = System::random(200);
+            
+            if (isMinus > 49)
+                dev *= -1;
+            
+            direction = dirChoise + dev;
+            
+            if (direction > 360)
+                direction -= 360;
+        }
+	
+	SharedObjectTemplate* templateObject = TemplateManager::instance()->getTemplate(building.hashCode());
+
+	if (templateObject == nullptr || !templateObject->isSharedTangibleObjectTemplate()) {
+		error("incorrect template object in randomizeDestroyMission " + building);
+		return;
+	}
+	
 	SharedObjectTemplate* templateObject = TemplateManager::instance()->getTemplate(building.hashCode());
 
 	if (templateObject == nullptr || !templateObject->isSharedTangibleObjectTemplate()) {
