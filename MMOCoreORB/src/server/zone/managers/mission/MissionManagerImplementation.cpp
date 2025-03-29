@@ -731,6 +731,9 @@ void MissionManagerImplementation::randomizeFactionTerminalMissions(CreatureObje
 		mission->setRewardCredits(mission->getRewardCredits() * cityBonus);
 
 		mission->setRefreshCounter(counter, true);
+
+ }
+ 
 	}
 }
 
@@ -741,6 +744,19 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 		return;
 	}
 
+	
+ Vector3 getMissionPosition(CreatureObject* player, float distance, float angle) {
+ 	float angleRads = angle * (Math::PI / 180.0f);
+ 	float newAngle = angleRads * (Math::PI / 2);
+ 
+ 	float newX = player->getWorldPositionX() + (cos(newAngle) * distance); 
+ 	float newY = player->getWorldPositionY() + (sin(newAngle) * distance);
+ 	float newZ = 0.0f;
+ 
+ 	return Vector3(newX, newY, newZ);
+ }
+ 
+	
 	LairSpawn* randomLairSpawn = getRandomLairSpawn(player, faction, MissionTypes::DESTROY);
 
 	if (randomLairSpawn == nullptr) {
@@ -763,6 +779,19 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	if (difficulty == 5)
 		difficulty = 4;
 
+		PlayerObject* targetGhost = player->getPlayerObject();
+ 
+ 	String level = targetGhost->getScreenPlayData("mission_level_choice", "levelChoice");
+ 
+ 	int levelChoice = Integer::valueOf(level);
+ 
+ 	if (levelChoice > 0) 
+ 		diffDisplay += levelChoice;
+ 
+ 	else if (player->isGrouped()) {
+ 		bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
+ 		Reference<GroupObject*> group = player->getGroup();
+	
 	int diffDisplay = difficultyLevel + 7;
 	if (player->isGrouped())
 		diffDisplay += player->getGroup()->getGroupLevel();
@@ -823,8 +852,16 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 		return;
 	}
 
-	int randTexts = System::random(34) + 1;
+	int randTexts = System::random(360) + 1;
 
+	//Player direction choice +/- 5 degrees deviation
+	int deviation = System::random(5);
+	
+ 			int isMinus = System::random(100);
+ 
+ 			if (isMinus > 40)
+		}
+	
 	mission->setMissionNumber(randTexts);
 
 	mission->setStartPosition(startPos.getX(), startPos.getY(), zone->getZoneName());
@@ -833,6 +870,8 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	mission->setMissionTargetName("@lair_n:" + lairTemplateObject->getName());
 	mission->setTargetTemplate(templateObject);
 	mission->setTargetOptionalTemplate(lairTemplate);
+
+	startPos = getMissionPosition(player, (float)distance, direction);	
 
 	int reward = destroyMissionBaseReward + destroyMissionDifficultyRewardFactor * difficultyLevel;
 	reward += System::random(destroyMissionRandomReward) + System::random(destroyMissionDifficultyRandomReward * difficultyLevel);
@@ -1794,6 +1833,20 @@ LairSpawn* MissionManagerImplementation::getRandomLairSpawn(CreatureObject* play
 	bool foundLair = false;
 	int counter = availableLairList->size();
 	int playerLevel = server->getPlayerManager()->calculatePlayerLevel(player);
+
+		PlayerObject* targetGhost = player->getPlayerObject();
+ 
+ 	String level = targetGhost->getScreenPlayData("mission_level_choice", "levelChoice");
+ 
+ 	int levelChoice = Integer::valueOf(level);
+ 
+ 	if (levelChoice > 0)
+ 		playerLevel = levelChoice;
+ 
+ 	else if (player->isGrouped()) {
+ 		bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
+ 		Reference<GroupObject*> group = player->getGroup();
+	
 	if (player->isGrouped())
 		playerLevel = player->getGroup()->getGroupLevel();
 
