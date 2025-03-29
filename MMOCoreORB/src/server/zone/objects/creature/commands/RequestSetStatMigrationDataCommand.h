@@ -106,7 +106,12 @@ public:
 		}
 
 
-		
+		// Player is allowed to migrate stats.
+ 		session->migrateStats();
+
+		if (privilegedPlayer) {
+ 			creature->sendSystemMessage("Stat Migration Permitted due to Staff Privileges.");
+ 		}
 	}
 
 	String getCooldownString(uint32 delta) const {
