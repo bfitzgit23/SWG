@@ -4,8 +4,8 @@ local PlayerManager = require("managers.player_manager")
 
 jediManagerName = "HologrindJediManager"
 
-NUMBEROFPROFESSIONSTOMASTER = 2 --this is now how many profs are selected
-MAXIMUMNUMBEROFPROFESSIONSTOSHOWWITHHOLOCRON = 2
+NUMBEROFPROFESSIONSTOMASTER = 5 --this is now how many profs are selected
+MAXIMUMNUMBEROFPROFESSIONSTOSHOWWITHHOLOCRON = 5
 
 HologrindJediManager = JediManager:new {
 	screenplayName = jediManagerName,
